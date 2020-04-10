@@ -1,0 +1,8 @@
+#!/3rd/anaconda3/bin/python
+
+from bq import today,date_offset
+import sys
+
+offset = sys.argv[1]
+
+print(date_offset(today(),int(offset)))
