@@ -1,0 +1,9 @@
+#!/3rd/anaconda3/bin/python
+
+from bq import Ini
+import sys
+
+fini = sys.argv[1]
+field = sys.argv[2]
+
+print(Ini(fini).find(field))

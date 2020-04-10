@@ -1,0 +1,44 @@
+#! /bin/bash
+
+GIT_DIR=$1
+DEST_DIR=$2
+# 1.Only files that differ
+# 2.How many lines differ in each file
+# 3.Details of difference
+LOG_LEVEL=$3
+# Default values
+if [ -z $LOG_LEVEL ];then LOG_LEVEL=1;fi
+# Loop FILE_LIST and check diff
+cat install.sh | while read line
+do
+    if [[ $line =~ ^[^#].*install( ) ]]
+    then
+        array=($line)
+        f=${array[-2]}
+
+        n_diff_line=`sudo diff $DEST_DIR/$f $GIT_DIR/$f|wc -l`
+        if [ "$LOG_LEVEL" == 1 ];then
+            if [ $n_diff_line -gt 0 ]
+            then
+                echo -e "\033[41;37m[$f]\033[0m"" differs."
+            else
+                echo -e "\033[46;37m[$f]\033[0m"" OK."
+            fi
+        elif [ "$LOG_LEVEL" == 2 ];then
+            if [ $n_diff_line -gt 0 ]
+            then
+                echo -e "\033[41;37m[$f]\033[0m"" $n_diff_line different lines."
+            else
+                echo -e "\033[46;37m[$f]\033[0m"" OK."
+            fi
+        elif [ "$LOG_LEVEL" == 3 ];then
+            if [ $n_diff_line -gt 0 ]
+            then
+                echo -e "\033[41;37m[$f]\033[0m"
+                sudo sdiff -s $DEST_DIR/$f $GIT_DIR/$f
+            else
+                echo -e "\033[46;37m[$f]\033[0m"" OK."
+            fi
+        fi
+    fi
+done
