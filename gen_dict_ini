@@ -1,0 +1,65 @@
+#!/3rd/anaconda3/bin/python
+
+# Import 
+from bq import generate_dictionary_ini_file
+import sys,getopt
+import pdb
+
+# Default inputs
+typo = 'UniverseBinary'
+configs = 'valid=1500'
+mode = 'w'
+to_print = False
+
+# Usage
+#usage = 'Usage:\n$ gen_dict_ini FINI DIRPATH -t[--typo] TYPO -c[--configs] CONFIGS '+\
+#        '-m[--mode] MODE\nSee more detail by $ gen_dict_ini -h'
+usage = \
+'''
+Usage:
+$ gen_dict_ini FINI DIRPATH -t[--typo] TYPO -c[--configs] CONFIGS -m[--mode] MODE -p[--print] PRINT
+See more detail by $ gen_dict_ini -h
+'''
+
+# Help
+if sys.argv[1] in ['-h','--help']:
+    help_str = \
+'''
+Docs:
+$ gen_dict_ini FINI DIRPATH -t[--typo] TYPO -c[--configs] CONFIGS -m[--mode] MODE -p[--print] PRINT
+  - FINI: the file name of ini to generate.
+  - DIRPATH: path of bin files.
+  - TYPO: [optional] default 'UniverseBinary', 'UniverseBinary/UniverseBinary3D/QuarterlyBinary'.
+  - CONFIGS: [optional] default 'valid=1500'.
+  - MODE: [optional] default 'w', 'w'/'a'
+  - PRINT: [optional] default False, a string to represent logic boolean value, with case ignored.
+'''
+    print(help_str)
+    sys.exit(2)
+
+# Inputs
+fini,dirpath = sys.argv[1:3]
+if len(sys.argv)>=3:
+    try:
+        opts,args = getopt.getopt(sys.argv[3:],'-t:-c:-m:-p:',['typo=','configs=','mode=','print='])
+        for p,v in opts:
+            if p in ['-t','--typo']:
+                typo = v
+            elif p in ['-c','--configs']:
+                configs = v
+            elif p in ['-m','--mode']:
+                mode = v
+            elif p in ['-p','--print']:
+                if v.lower() in ['t','true']:
+                    to_print = True
+                elif v.lower() in ['f','false']:
+                    to_print = False
+    except getopt.GetoptError:
+        print(usage)
+        sys.exit(2)
+
+# Generate ini file
+generate_dictionary_ini_file(fini,dirpath,typo,configs,mode,to_print)
+    
+
+

@@ -1,0 +1,23 @@
+#!/usr/bin/perl
+
+use strict;
+use Getopt::Std;
+
+my %opts;
+getopts("s:u:", \%opts);
+
+$opts{'s'} or die "Missing subject, -s option\n";
+$opts{'u'} or die "Missing user, -u option\n";
+
+my $subject = $opts{'s'};
+
+my @inputs = <>;
+
+if (scalar(@inputs))
+{
+    open MAIL, "|mailx -s \"$opts{'s'}\"  $opts{'u'} " or die "messed up:$!\n";
+    print MAIL @inputs;
+    close MAIL;
+}
+
+# vim: syntax=perl
